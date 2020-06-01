@@ -1,11 +1,12 @@
-# Event calendar
-> An application that supports SCADA system
+# Report Aid
+> An application that supports SCADA system in reporting.
 
 
 ## General info
 This version includes among others:
 * Aquiring data from MS SQL.
 * Picking data using data pickers.
+* Displaying data in tables.
 * Saving selected records to .csv.
 
 
@@ -20,13 +21,21 @@ Variable page:
 
 ![Variable](/img/Variable.PNG)
 
-Result page:
+Daily Result page:
 
-![Result](/img/Result.png)
+![DailyResult](/img/DailyResult.png)
+
+Hourly Result page:
+
+![HourlyResult](/img/HourlyResult.png)
 
 DataPicker page:
 
 ![DataPicker](/img/DataPicker.png)
+
+View of .csv file generated page:
+
+![CSV](/img/CSV.png)
 
 
 ## TODO
