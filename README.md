@@ -22,11 +22,11 @@ Variable page:
 
 Result page:
 
-![Result](/img/Result.PNG)
+![Result](/img/Result.png)
 
 DataPicker page:
 
-![DataPicker](/img/DataPicker.PNG)
+![DataPicker](/img/DataPicker.png)
 
 
 ## TODO
