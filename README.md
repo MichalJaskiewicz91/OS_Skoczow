@@ -16,21 +16,18 @@ This version includes among others:
 * Javascript datapicker script
 
 ## Screenshots
-Calendar page:
+Variable page:
 
-![calendar](/img/calendar.PNG)
+![Variable](/img/Variable.PNG)
 
-Event list page:
+Result page:
 
-![events](/img/events.PNG)
+![Result](/img/Result.PNG)
 
-Detail page:
+DataPicker page:
 
-![detail](/img/detail.PNG)
+![DataPicker](/img/DataPicker.PNG)
 
-Detail page:
-
-![account](/img/account.PNG)
 
 ## TODO
 List of TODOs for future development
