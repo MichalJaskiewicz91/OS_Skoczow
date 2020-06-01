@@ -33,7 +33,7 @@ DataPicker page:
 
 ![DataPicker](/img/DataPicker.png)
 
-View of .csv file generated page:
+View of .csv file generated file:
 
 ![CSV](/img/CSV.png)
 
