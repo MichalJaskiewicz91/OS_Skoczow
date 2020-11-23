@@ -41,6 +41,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>Data</th>
                                         <th>Max Wartość</th>
                                         <th>Min Wartość</th>
@@ -86,8 +87,13 @@
 
                                         string Sum = @ViewBag.reader.GetString(3);
                                         float parsedSum = float.Parse(Sum);
+
+                                        int Id = @ViewBag.reader.GetInt32(5);
                                         <tbody>
                                             <tr>
+                                                <td>
+                                                    @Id
+                                                </td>
                                                 <td>
                                                     @reparsedData
                                                 </td>
@@ -164,6 +170,9 @@
 
                                     <tbody>
                                         <tr style="color:orangered">
+                                            <td>
+                                                
+                                            </td>
                                             <td>
                                                 Średnia/Suma
                                             </td>
