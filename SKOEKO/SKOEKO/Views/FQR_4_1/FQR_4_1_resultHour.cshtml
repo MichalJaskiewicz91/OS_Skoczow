@@ -40,6 +40,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Data</th>
                                     <th>Wartość</th>
                                     <th>Jednostka</th>
@@ -61,9 +62,13 @@
                                     string Wartosc = @ViewBag.reader.GetString(0);
                                     float parsedWartosc = float.Parse(Wartosc);
 
+                                    int Id = @ViewBag.reader.GetInt32(2);
 
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                @Id
+                                            </td>
                                             <td>
                                                 @parsedData - @secondParse
                                             </td>
@@ -88,18 +93,21 @@
                                 
                                     <tbody>
                                         
-                                            <tr style="color:orangered">
-                                                <td>
-                                                    Suma
-                                                </td>
+                                        <tr style="color:orangered">
+                                            <td>
+                                              
+                                            </td>
+                                            <td>
+                                                Suma
+                                            </td>
 
-                                                <td>
-                                                    @wynik
-                                                </td>
-                                                <td>
-                                                    m3
-                                                </td>
-                                            </tr>
+                                            <td>
+                                                @wynik
+                                            </td>
+                                            <td>
+                                                m3
+                                            </td>
+                                        </tr>
                                     </tbody>
 
                                     }
