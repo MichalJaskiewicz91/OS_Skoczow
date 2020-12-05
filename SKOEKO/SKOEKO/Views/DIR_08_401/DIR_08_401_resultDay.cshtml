@@ -1,9 +1,11 @@
 ﻿@using System.IO;
 @using System;
 @using System.Collections;
+
 @{
     ViewBag.Title = "DIR_08_401";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,116 +34,174 @@
     <div>
         <big>
             <div class="row">
-                <div style="width:60%;" class="col-lg-6 ">
+                <div style="width:60%;"class="col-lg-6 ">
                     <h2>Znalezione rekordy</h2>
                     <div class="table-responsive">
+                        
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Data</th>
+                                        <th>Max Wartość</th>
+                                        <th>Min Wartość</th>
+                                        <th>Średnia Wartość</th>
+                                        <th>Ilość</th>
+                                        <th>Jednostka</th>
 
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Max Wartość</th>
-                                    <th>Min Wartość</th>
-                                    <th>Jednostka</th>
+                                    </tr>
+                                </thead>
+                                @{
 
-                                </tr>
-                            </thead>
-                            @{
-
-                                ArrayList myMax = new ArrayList();
-                                ArrayList myMin = new ArrayList();
-                                float[] arrMax = new float[1000];
-                                float[] arrMin = new float[1000];
+                                    ArrayList myMax = new ArrayList();
+                                    ArrayList myMin = new ArrayList();
+                                    ArrayList myAver = new ArrayList();
+                                    ArrayList mySum = new ArrayList();
+                                    float[] arrMax = new float[1000];
+                                    float[] arrMin = new float[1000];
+                                    float[] arrAver = new float[1000];
+                                    float[] arrSum = new float[1000];
 
 
 
+                                    float sumaMax = 0;
+                                    float sumaMin = 0;
+                                    float sumaAver = 0;
+                                    float sumaSum = 0;
+                                    float wynikMax, wynikMin, wynikAver;
 
-                                float sumaMax = 0;
-                                float sumaMin = 0;
-                                float wynikMax, wynikMin;
+                                    while (ViewBag.reader.Read())
+                                    {
+                                        DateTime data = @ViewBag.reader.GetDateTime(4);
+                                        DateTime parsedData = data.AddDays(-1);
+                                        String reparsedData = parsedData.ToString("yyyy-MM-dd");
 
-                                while (ViewBag.reader.Read())
-                                {
-                                    DateTime data = @ViewBag.reader.GetDateTime(2);
-                                    DateTime parsedData = data.AddDays(-1);
-                                    String reparsedData = parsedData.ToString("yyyy-MM-dd");
+                                        string Max = @ViewBag.reader.GetString(0);
+                                        float parsedMax = float.Parse(Max);
 
-                                    string Max = @ViewBag.reader.GetString(0);
-                                    float parsedMax = float.Parse(Max);
+                                        string Min = @ViewBag.reader.GetString(1);
+                                        float parsedMin = float.Parse(Min);
 
-                                    string Min = @ViewBag.reader.GetString(1);
-                                    float parsedMin = float.Parse(Min);
+                                        string Aver = @ViewBag.reader.GetString(2);
+                                        float parsedAver = float.Parse(Aver);
+
+                                        string Sum = @ViewBag.reader.GetString(3);
+                                        float parsedSum = float.Parse(Sum);
+
+                                        int Id = @ViewBag.reader.GetInt32(5);
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    @Id
+                                                </td>
+                                                <td>
+                                                    @reparsedData
+                                                </td>
+                                                <td>
+                                                    @parsedMax
+                                                </td>
+                                                <td>
+                                                    @parsedMin
+                                                </td>
+                                                <td>
+                                                    @parsedAver
+                                                </td>
+                                                <td>
+                                                    @parsedSum
+                                                </td>
+                                                <td>
+                                                    m3
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+
+                                        myMax.Add(parsedMax);
+                                        myMin.Add(parsedMin);
+                                        myAver.Add(parsedAver);
+                                        mySum.Add(parsedSum);
+
+                                    }
+
+                                    arrMax = (float[])myMax.ToArray(typeof(float));
+
+                                    for (int i = 0; i < arrMax.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                    {
+                                        sumaMax += arrMax[i];                        //Dodajemy kolejne elementy tablicy
+                                    }
+
+                                    wynikMax = sumaMax / arrMax.Length;
+
+
+                                    arrMin = (float[])myMin.ToArray(typeof(float));
+
+                                    for (int i = 0; i < arrMin.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                    {
+                                        sumaMin += arrMin[i];                        //Dodajemy kolejne elementy tablicy
+                                    }
+
+                                    wynikMin = sumaMin / arrMin.Length;
+
+                                    arrAver = (float[])myAver.ToArray(typeof(float));
+
+                                    for (int i = 0; i < arrAver.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                    {
+                                        sumaAver += arrAver[i];                        //Dodajemy kolejne elementy tablicy
+                                    }
+
+                                    wynikAver = sumaAver / arrAver.Length;
+
+                                    arrSum = (float[])mySum.ToArray(typeof(float));
+
+                                    for (int i = 0; i < arrSum.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                    {
+                                        sumaSum += arrSum[i];                        //Dodajemy kolejne elementy tablicy
+                                    }
+
+
+
+
+
+
+
+
+
+
 
                                     <tbody>
-                                        <tr>
+                                        <tr style="color:orangered">
                                             <td>
-                                                @reparsedData
+                                                
                                             </td>
                                             <td>
-                                                @parsedMax
+                                                Średnia/Suma
                                             </td>
                                             <td>
-                                                @parsedMin
+                                                @wynikMax
                                             </td>
                                             <td>
-                                                g/l
+                                                @wynikMin
+                                            </td>
+                                            <td>
+                                                @wynikAver
+                                            </td>
+                                            <td>
+                                                @sumaSum
+                                            </td>
+                                            <td>
+                                                m3
                                             </td>
 
                                         </tr>
                                     </tbody>
 
-                                    myMax.Add(parsedMax);
-                                    myMin.Add(parsedMin);
 
 
                                 }
+                            </table>
+                            <a href="/DIR_08_401/DIR_08_401_searchDay"><button class="btn btn-default">Wróć</button></a>
 
-                                arrMax = (float[])myMax.ToArray(typeof(float));
-
-                                for (int i = 0; i < arrMax.Length; i++)        //Tworzymy pętle działającą do końca tablicy
-                                {
-                                    sumaMax += arrMax[i];                        //Dodajemy kolejne elementy tablicy
-                                }
-
-                                wynikMax = sumaMax / arrMax.Length;
-
-
-                                arrMin = (float[])myMin.ToArray(typeof(float));
-
-                                for (int i = 0; i < arrMin.Length; i++)        //Tworzymy pętle działającą do końca tablicy
-                                {
-                                    sumaMin += arrMin[i];                        //Dodajemy kolejne elementy tablicy
-                                }
-
-                                wynikMin = sumaMin / arrMin.Length;
-
-
-
-                                <tbody>
-                                    <tr style="color:orangered">
-                                        <td>
-                                            Średnia/Suma
-                                        </td>
-                                        <td>
-                                            @wynikMax
-                                        </td>
-                                        <td>
-                                            @wynikMin
-                                        </td>
-                                        <td>
-                                            g/l
-                                        </td>
-
-                                    </tr>
-                                </tbody>
-
-
-
-                            }
-                        </table>
-                        <a href="/DIR_08_401/DIR_08_401_searchDay"><button class="btn btn-default">Wróć</button></a>
-
-
+                        
                     </div>
                 </div>
             </div>
