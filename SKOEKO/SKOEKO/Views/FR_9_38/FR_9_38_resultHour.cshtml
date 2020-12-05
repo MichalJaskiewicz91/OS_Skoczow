@@ -38,12 +38,13 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Data</th>
                                     <th>Wartość</th>
                                     <th>Jednostka</th>
                                 </tr>
                             </thead>
-                            @{  
+                            @{
 
                                 ArrayList myAL = new ArrayList();
                                 float[] myTable = new float[1000];
@@ -59,9 +60,13 @@
                                     string Wartosc = @ViewBag.reader.GetString(0);
                                     float parsedWartosc = float.Parse(Wartosc);
 
+                                    int Id = @ViewBag.reader.GetInt32(2);
 
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                @Id
+                                            </td>
                                             <td>
                                                 @parsedData - @secondParse
                                             </td>
@@ -83,32 +88,33 @@
                                 {
                                     wynik += myTable[i];                        //Dodajemy kolejne elementy tablicy
                                 }
-                                
-                                    <tbody>
-                                        
-                                            <tr style="color:orangered">
-                                                <td>
-                                                    Suma
-                                                </td>
 
-                                                <td>
-                                                    @wynik
-                                                </td>
-                                                <td>
-                                                    m3
-                                                </td>
-                                            </tr>
-                                    </tbody>
+                                <tbody>
 
-                                    }
-</table>
+                                    <tr style="color:orangered">
+                                        <td></td>
+                                        <td>
+                                            Suma
+                                        </td>
+
+                                        <td>
+                                            @wynik
+                                        </td>
+                                        <td>
+                                            m3
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            }
+                        </table>
 
 
                         <a href="/FR_9_38/FR_9_38_searchHour"><button class="btn btn-default">Wróć</button></a>
                     </div>
                 </div>
-              </div>
-</big>
+            </div>
+        </big>
     </div>
 </body>
 </html>

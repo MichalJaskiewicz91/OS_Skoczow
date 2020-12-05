@@ -38,77 +38,83 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Data</th>
                                     <th>Wartość</th>
                                     <th>Jednostka</th>
                                 </tr>
                             </thead>
-                            @{  
+                            @{
 
-                                ArrayList myAL = new ArrayList();
-                                float[] myTable = new float[1000];
-                                float wynik = 0;
+                            ArrayList myAL = new ArrayList();
+                            float[] myTable = new float[1000];
+                            float wynik = 0;
 
-                                while (ViewBag.reader.Read())
-                                {
-                                    DateTime data = @ViewBag.reader.GetDateTime(1);
-                                    DateTime parsedData = data.AddHours(-1).AddMinutes(-15);
-                                    DateTime firstParse = parsedData.AddHours(+1);
-                                    String secondParse = firstParse.ToString("HH:mm:ss");
+                            while (ViewBag.reader.Read())
+                            {
+                            DateTime data = @ViewBag.reader.GetDateTime(1);
+                            DateTime parsedData = data.AddHours(-1).AddMinutes(-15);
+                            DateTime firstParse = parsedData.AddHours(+1);
+                            String secondParse = firstParse.ToString("HH:mm:ss");
 
-                                    string Wartosc = @ViewBag.reader.GetString(0);
-                                    float parsedWartosc = float.Parse(Wartosc);
+                            string Wartosc = @ViewBag.reader.GetString(0);
+                            float parsedWartosc = float.Parse(Wartosc);
 
+                            int Id = @ViewBag.reader.GetInt32(2);
 
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                @parsedData - @secondParse
-                                            </td>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Id
+                                    </td>
+                                    <td>
+                                        @parsedData - @secondParse
+                                    </td>
 
-                                            <td>
-                                                @parsedWartosc
-                                            </td>
-                                            <td>
-                                                m3
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    myAL.Add(parsedWartosc);
+                                    <td>
+                                        @parsedWartosc
+                                    </td>
+                                    <td>
+                                        m3
+                                    </td>
+                                </tr>
+                            </tbody>
+                            myAL.Add(parsedWartosc);
 
-                                }
-                                myTable = (float[])myAL.ToArray(typeof(float));
+                            }
+                            myTable = (float[])myAL.ToArray(typeof(float));
 
-                                for (int i = 0; i < myTable.Length; i++)        //Tworzymy pętle działającą do końca tablicy
-                                {
-                                    wynik += myTable[i];                        //Dodajemy kolejne elementy tablicy
-                                }
-                                
-                                    <tbody>
-                                        
-                                            <tr style="color:orangered">
-                                                <td>
-                                                    Suma
-                                                </td>
+                            for (int i = 0; i < myTable.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                            {
+                            wynik += myTable[i];                        //Dodajemy kolejne elementy tablicy
+                            }
 
-                                                <td>
-                                                    @wynik
-                                                </td>
-                                                <td>
-                                                    m3
-                                                </td>
-                                            </tr>
-                                    </tbody>
+                            <tbody>
 
-                                    }
-</table>
+                                <tr style="color:orangered">
+                                    <td></td>
+                                    <td>
+                                        Suma
+                                    </td>
+
+                                    <td>
+                                        @wynik
+                                    </td>
+                                    <td>
+                                        m3
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            }
+                        </table>
 
 
                         <a href="/FR_9_32/FR_9_32_searchHour"><button class="btn btn-default">Wróć</button></a>
                     </div>
                 </div>
-              </div>
-</big>
+            </div>
+        </big>
     </div>
 </body>
 </html>
