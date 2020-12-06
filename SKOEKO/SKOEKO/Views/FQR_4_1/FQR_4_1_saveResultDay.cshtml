@@ -32,49 +32,6 @@
                     <div class="table-responsive">
                   
 
-
-                        @{
-
-                            StringWriter sw = new StringWriter();
-                            sw.WriteLine("\"Data\",\"Max Wartosc\",\"Min Wartosc\",\"Srednia Wartosc\",\"Ilosc\"");
-
-
-
-
-                            while (ViewBag.reader.Read())
-                            {
-                                DateTime data = @ViewBag.reader.GetDateTime(4);
-                                string Max = @ViewBag.reader.GetString(0);
-                                string Min = @ViewBag.reader.GetString(1);
-                                string Sr = @ViewBag.reader.GetString(2);
-                                string Ilosc = @ViewBag.reader.GetString(3);
-
-
-
-
-                                DateTime parsedData = data.AddDays(-1);
-                                String reparsedData = parsedData.ToString("yyyy-MM-dd");
-                                float parsedMax = float.Parse(Max);
-                                float parsedMin = float.Parse(Min);
-                                float parsedSr = float.Parse(Sr);
-                                float parsedIlosc = float.Parse(Ilosc);
-
-                                sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"", reparsedData, parsedMax,parsedMin,parsedSr,parsedIlosc));
-
-
-                            }
-
-
-
-                            Response.ClearContent();
-                            Response.AddHeader("content-disposition", "attachment;filename=FQR_4_1_Raport_Dobowy.csv");
-                            Response.ContentType = "text/csv";
-
-                            Response.Write(sw.ToString());
-                            Response.End();
-
-
-                        }
                         <a href="/FQR_4_1/FQR_4_1_searchDay"><button class="btn btn-default">Wróć</button></a>
                     </div>
                 </div>

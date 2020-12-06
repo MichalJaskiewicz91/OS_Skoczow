@@ -40,28 +40,35 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Data</th>
-                                    <th>Wartość</th>
+                                    <th>WartośćMax</th>
+                                    <th>WartośćMin</th>
                                     <th>Jednostka</th>
                                 </tr>
                             </thead>
                             @{
 
-                                ArrayList myAL = new ArrayList();
-                                float[] myTable = new float[1000];
-                                float wynik = 0;
+                                ArrayList myALMax = new ArrayList();
+                                float[] myTableMax = new float[1000];
+                                ArrayList myALMin = new ArrayList();
+                                float[] myTableMin = new float[1000];
+                                float wynikMax = 0;
+                                float wynikMin = 0;
+                                float wynikMaxAV, wynikMinAV;
 
                                 while (ViewBag.reader.Read())
                                 {
-                                    DateTime data = @ViewBag.reader.GetDateTime(1);
+                                    DateTime data = @ViewBag.reader.GetDateTime(2);
                                     DateTime parsedData = data.AddHours(-1).AddMinutes(-15);
                                     DateTime firstParse = parsedData.AddHours(+1);
                                     String secondParse = firstParse.ToString("HH:mm:ss");
 
-                                    string Wartosc = @ViewBag.reader.GetString(0);
-                                    float parsedWartosc = float.Parse(Wartosc);
+                                    string WartoscMax = @ViewBag.reader.GetString(0);
+                                    float parsedWartoscMax = float.Parse(WartoscMax);
 
-                                    int Id = @ViewBag.reader.GetInt32(2);
+                                    string WartoscMin = @ViewBag.reader.GetString(1);
+                                    float parsedWartoscMin = float.Parse(WartoscMin);
 
+                                    int Id = @ViewBag.reader.GetInt32(3);
                                     <tbody>
                                         <tr>
                                             <td>
@@ -72,36 +79,52 @@
                                             </td>
 
                                             <td>
-                                                @parsedWartosc
+                                                @parsedWartoscMax
                                             </td>
                                             <td>
-                                                m3
+                                                @parsedWartoscMin
+                                            </td>
+                                            <td>
+                                                g/l
                                             </td>
                                         </tr>
                                     </tbody>
-                                    myAL.Add(parsedWartosc);
-
+                                    myALMax.Add(parsedWartoscMax);
+                                    myALMin.Add(parsedWartoscMin);
                                 }
-                                myTable = (float[])myAL.ToArray(typeof(float));
+                                myTableMax = (float[])myALMax.ToArray(typeof(float));
 
-                                for (int i = 0; i < myTable.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                for (int i = 0; i < myTableMax.Length; i++)        //Tworzymy pętle działającą do końca tablicy
                                 {
-                                    wynik += myTable[i];                        //Dodajemy kolejne elementy tablicy
+                                    wynikMax += myTableMax[i];                        //Dodajemy kolejne elementy tablicy
                                 }
+                                wynikMaxAV = wynikMax / myTableMax.Length;
 
+                                myTableMin = (float[])myALMin.ToArray(typeof(float));
+
+                                for (int i = 0; i < myTableMin.Length; i++)        //Tworzymy pętle działającą do końca tablicy
+                                {
+                                    wynikMin += myTableMin[i];                        //Dodajemy kolejne elementy tablicy
+                                }
+                                wynikMinAV = wynikMin / myTableMin.Length;
                                 <tbody>
 
                                     <tr style="color:orangered">
-                                        <td></td>
                                         <td>
-                                            Suma
+
+                                        </td>
+                                        <td>
+                                            Średnia
                                         </td>
 
                                         <td>
-                                            @wynik
+                                            @wynikMaxAV
                                         </td>
                                         <td>
-                                            m3
+                                            @wynikMinAV
+                                        </td>
+                                        <td>
+                                            g/l
                                         </td>
                                     </tr>
                                 </tbody>
