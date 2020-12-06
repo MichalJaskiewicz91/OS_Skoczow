@@ -1,54 +1,23 @@
 ﻿using SKOEKO.Models;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml.Linq;
 using System.IO;
-using System.Globalization;
-using System.Threading;
+using SKOEKO.Services;
+using ClosedXML.Excel;
+using System.Data;
 
 namespace SKOEKO.Controllers
 {
     public class FIQRC_17_004Controller : Controller
     {
-        // GET: Report
-        public ActionResult Index()
-        {
-            return View();
-        }
+        private static string quantityDay = "FIQRC_17_004_Raport_Dobowy";
+        private static string quantityHour = "FIQRC_17_004_Raport_Godzinowy";
+        ParseData parseData = new ParseData();
+        StringWriter stringWriter = new StringWriter();
+        DataTable dataTable = new DataTable();
+        string dateToRaport;
 
-        public ActionResult tables()
-        {
-            return View();
-        }
-        public ActionResult charts()
-        {
-            return View();
-        }
-        public ActionResult forms()
-        {
-            return View();
-        }
-        public ActionResult blankpage()
-        {
-            return View();
-        }
-        public ActionResult bootstrapelements()
-        {
-            return View();
-        }
-        public ActionResult bootstrapgrid()
-        {
-            return View();
-        }
-        public ActionResult indexrtl()
-        {
-            return View();
-        }
 
         public ActionResult FIQRC_17_004_searchDay()
         {
@@ -122,7 +91,7 @@ namespace SKOEKO.Controllers
             String reparsedTimeEnd = parsedTimeEndDay.ToString("yyyy-MM-dd HH:mm:ss");
 
             String odDateTime = od + " " + reparsedTimeOd;
-            
+
 
             String stm = "SELECT * FROM [dbo].[FIQRC_17_004] WHERE Data > '" + odDateTime + "' AND Data < '" + reparsedTimeEnd + "'ORDER BY Data ASC";
 
@@ -137,9 +106,8 @@ namespace SKOEKO.Controllers
         }
 
         [HttpPost]
-        public ActionResult FIQRC_17_004_saveResultDay(Search find)
+        public void FIQRC_17_004_saveResultDay(Search find, string sumbit)
         {
-
             var od = find.from;
             var doo = find.to;
             var timeSt = find.timeStart;
@@ -148,13 +116,14 @@ namespace SKOEKO.Controllers
             DateTime dataOd = DateTime.Parse(od);   // Dodanie dnia do daty
             DateTime parsedDataOdDay = dataOd.AddDays(+1);
             String reparsedDataOd = parsedDataOdDay.ToString("yyyy-M-d");
-            
+
 
             DateTime dataEnd = DateTime.Parse(doo);     // Dodanie dnia do daty
             DateTime parsedDataEndDay = dataEnd.AddDays(+1);
             String reparsedDataEnd = parsedDataEndDay.ToString("yyyy-M-d");
 
-
+            // Create date to raport
+            dateToRaport = quantityDay + "_" + od + "-" + doo;
 
             String odDateTime = reparsedDataOd + " " + timeSt;
             String endDateTime = reparsedDataEnd + " " + timeEn;
@@ -163,15 +132,49 @@ namespace SKOEKO.Controllers
             String stm = "SELECT * FROM [dbo].[FIQRC_17_004_Doba] WHERE Data > '" + odDateTime + "' AND Data < '" + endDateTime + "'ORDER BY Data ASC";
 
             SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS;Database=Citect;Integrated Security=true");
+
+            // Database for debugging
+            //SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Citect;Integrated Security=True");
             conn.Open();
             SqlCommand cmd = new SqlCommand(stm, conn);
             SqlDataReader reader = cmd.ExecuteReader();
-            ViewBag.reader = reader;
-            return View();
 
+            // Distinguish whether save to CSV or Excel
+            if (sumbit == "Zapisz do CSV")
+            {
+                stringWriter = parseData.ParseDayDataCSV(reader);
+
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".csv");
+                Response.ContentType = "text/csv";
+
+                Response.Write(stringWriter.ToString());
+                Response.End();
+            }
+            else
+            {
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    dataTable = parseData.ParseDayDataExcel(reader);
+
+                    wb.Worksheets.Add(dataTable, "Report");
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.speadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".xlsx");
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(memoryStream);
+                        memoryStream.WriteTo(Response.OutputStream);
+                        Response.Flush();
+                        Response.End();
+                    }
+                }
+            }
         }
         [HttpPost]
-        public ActionResult FIQRC_17_004_saveResultHour(Search find)
+        public void FIQRC_17_004_saveResultHour(Search find, string sumbit)
         {
 
             var od = find.from;
@@ -190,6 +193,9 @@ namespace SKOEKO.Controllers
             DateTime parsedTimeEndDay = dateTimeEnd.AddHours(+1);
             String reparsedTimeEnd = parsedTimeEndDay.ToString("yyyy-MM-dd HH:mm:ss");
 
+            // Create date and time to raport
+            dateToRaport = quantityHour + "_" + od + "_" + timeSt + "-" + doo + "_" + timeEn;
+
             String odDateTime = od + " " + reparsedTimeOd;
 
             String stm = "SELECT * FROM [dbo].[FIQRC_17_004] WHERE Data > '" + odDateTime + "' AND Data < '" + reparsedTimeEnd + "'ORDER BY Data ASC";
@@ -199,23 +205,39 @@ namespace SKOEKO.Controllers
             SqlCommand cmd = new SqlCommand(stm, conn);
             SqlDataReader reader = cmd.ExecuteReader();
 
-            ViewBag.reader = reader;
-            return View();
+            // Distinguish whether save to CSV or Excel
+            if (sumbit == "Zapisz do CSV")
+            {
+                stringWriter = parseData.ParseHourDataCSV(reader);
 
-        }
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".csv");
+                Response.ContentType = "text/csv";
 
-        public void EksportToCSV()
-        {
-            StringWriter sw = new StringWriter();
-            sw.WriteLine("\"Wartosc\"", "\"Data\"");
-            sw.WriteLine("\"Wartfsafosc\",\"Datdsafaa\"");
-            Response.ClearContent();
-            Response.AddHeader("content-disposition", "attachment;filename=Exportedfile.csv");
-            Response.ContentType = "text/csv";
+                Response.Write(stringWriter.ToString());
+                Response.End();
+            }
+            else
+            {
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    dataTable = parseData.ParseHourDataExcel(reader);
 
-            Response.Write(sw.ToString());
-            Response.End();
-
+                    wb.Worksheets.Add(dataTable, "Report");
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.speadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".xlsx");
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(memoryStream);
+                        memoryStream.WriteTo(Response.OutputStream);
+                        Response.Flush();
+                        Response.End();
+                    }
+                }
+            }
 
         }
 
