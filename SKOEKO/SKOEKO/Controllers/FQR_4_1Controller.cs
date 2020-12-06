@@ -174,7 +174,7 @@ namespace SKOEKO.Controllers
             }
         }
         [HttpPost]
-        public ActionResult FQR_4_1_saveResultHour(Search find)
+        public void FQR_4_1_saveResultHour(Search find, string sumbit)
         {
 
             var od = find.from;
@@ -193,6 +193,9 @@ namespace SKOEKO.Controllers
             DateTime parsedTimeEndDay = dateTimeEnd.AddHours(+1);
             String reparsedTimeEnd = parsedTimeEndDay.ToString("yyyy-MM-dd HH:mm:ss");
 
+            // Create date and time to raport
+            dateToRaport = quantityHour + "_" + od + "_" + timeSt + "-" + doo + timeEn;
+
             String odDateTime = od + " " + reparsedTimeOd;
 
             String stm = "SELECT * FROM [dbo].[FQR_4_1] WHERE Data > '" + odDateTime + "' AND Data < '" + reparsedTimeEnd + "'ORDER BY Data ASC";
@@ -202,8 +205,39 @@ namespace SKOEKO.Controllers
             SqlCommand cmd = new SqlCommand(stm, conn);
             SqlDataReader reader = cmd.ExecuteReader();
 
-            ViewBag.reader = reader;
-            return View();
+            // Distinguish whether save to CSV or Excel
+            if (sumbit == "Zapisz do CSV")
+            {
+                stringWriter = saveToFile.SaveToCSV(reader);
+
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".csv");
+                Response.ContentType = "text/csv";
+
+                Response.Write(stringWriter.ToString());
+                Response.End();
+            }
+            else
+            {
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    dataTable = saveToFile.SaveToExcel(reader);
+
+                    wb.Worksheets.Add(dataTable, "Customers");
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.speadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".xlsx");
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(memoryStream);
+                        memoryStream.WriteTo(Response.OutputStream);
+                        Response.Flush();
+                        Response.End();
+                    }
+                }
+            }
 
         }
 
