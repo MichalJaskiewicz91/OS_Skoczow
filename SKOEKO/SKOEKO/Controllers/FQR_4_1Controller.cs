@@ -13,7 +13,7 @@ namespace SKOEKO.Controllers
     {
         private static string quantityDay = "FQR_4_1_Raport_Dobowy";
         private static string quantityHour = "FQR_4_1_Raport_Godzinowy";
-        SaveToFile saveToFile = new SaveToFile();
+        ParseData parseData = new ParseData();
         StringWriter stringWriter = new StringWriter();
         DataTable dataTable = new DataTable();
         string dateToRaport;
@@ -142,7 +142,7 @@ namespace SKOEKO.Controllers
             // Distinguish whether save to CSV or Excel
             if (sumbit == "Zapisz do CSV")
             {
-                stringWriter = saveToFile.SaveToCSV(reader);
+                stringWriter = parseData.ParseDayDataCSV(reader);
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename="+dateToRaport+".csv");
@@ -155,9 +155,9 @@ namespace SKOEKO.Controllers
             {
                 using (XLWorkbook wb = new XLWorkbook())
                 {
-                    dataTable = saveToFile.SaveToExcel(reader);
+                    dataTable = parseData.ParseDayDataExcel(reader);
 
-                    wb.Worksheets.Add(dataTable, "Customers");
+                    wb.Worksheets.Add(dataTable, "Report");
                     Response.Clear();
                     Response.Buffer = true;
                     Response.Charset = "";
@@ -194,7 +194,7 @@ namespace SKOEKO.Controllers
             String reparsedTimeEnd = parsedTimeEndDay.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Create date and time to raport
-            dateToRaport = quantityHour + "_" + od + "_" + timeSt + "-" + doo + timeEn;
+            dateToRaport = quantityHour + "_" + od + "_" + timeSt + "-" + doo + "_" + timeEn;
 
             String odDateTime = od + " " + reparsedTimeOd;
 
@@ -208,7 +208,7 @@ namespace SKOEKO.Controllers
             // Distinguish whether save to CSV or Excel
             if (sumbit == "Zapisz do CSV")
             {
-                stringWriter = saveToFile.SaveToCSV(reader);
+                stringWriter = parseData.ParseHourDataCSV(reader);
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".csv");
@@ -221,9 +221,9 @@ namespace SKOEKO.Controllers
             {
                 using (XLWorkbook wb = new XLWorkbook())
                 {
-                    dataTable = saveToFile.SaveToExcel(reader);
+                    dataTable = parseData.ParseHourDataExcel(reader);
 
-                    wb.Worksheets.Add(dataTable, "Customers");
+                    wb.Worksheets.Add(dataTable, "Report");
                     Response.Clear();
                     Response.Buffer = true;
                     Response.Charset = "";

@@ -250,7 +250,7 @@
     <Compile Include="Models\FQR_4_1.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\SaveToFile.cs" />
+    <Compile Include="Services\ParseData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -404,8 +404,6 @@
     <Content Include="Views\FQR_4_1\FQR_4_1_resultDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_saveSearchDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_saveSearchHour.cshtml" />
-    <Content Include="Views\FQR_4_1\FQR_4_1_saveResultDay.cshtml" />
-    <Content Include="Views\FQR_4_1\FQR_4_1_saveResultHour.cshtml" />
     <Content Include="Views\FR_9_33\FR_9_33_resultDay.cshtml" />
     <Content Include="Views\FR_9_33\FR_9_33_resultHour.cshtml" />
     <Content Include="Views\FR_9_33\FR_9_33_saveResultDay.cshtml" />
