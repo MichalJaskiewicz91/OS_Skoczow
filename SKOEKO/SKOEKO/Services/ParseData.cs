@@ -10,8 +10,6 @@ namespace SKOEKO.Services
 {
     public class ParseData
     {
-        string unit = "m3";
-
         /// <summary>
         /// A method that parse data for daily raport exported to CSV
         /// </summary>
@@ -19,6 +17,7 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public StringWriter ParseDayDataCSV(SqlDataReader reader)
         {
+            string unit = "m3";
             StringWriter sw = new StringWriter();
             sw.WriteLine("\"ID\",\"Data\",\"Max Wartosc\",\"Min Wartosc\",\"Srednia Wartosc\",\"Ilosc\",\"Jednostka\"");
             //Read the reader
@@ -51,6 +50,7 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public StringWriter ParseHourDataCSV(SqlDataReader reader)
         {
+            string unit = "m3";
             StringWriter sw = new StringWriter();
             sw.WriteLine("\"ID\",\"Data\",\"Wartosc\",\"Jednostka\"");
 
@@ -82,6 +82,7 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public DataTable ParseDayDataExcel(SqlDataReader reader)
         {
+            string unit = "m3";
             // Create datatable
             DataTable datatable = new DataTable();
 
@@ -149,6 +150,7 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public DataTable ParseHourDataExcel(SqlDataReader reader)
         {
+            string unit = "m3";
             // Create datatable
             DataTable datatable = new DataTable();
 
@@ -189,6 +191,188 @@ namespace SKOEKO.Services
                 dataRow["ID"] = Id;
                 dataRow["Data"] = all;
                 dataRow["Wartość"] = parsedWartosc;
+                dataRow["Jednostka"] = unit;
+
+                // Add row to the datatable
+                datatable.Rows.Add(dataRow);
+
+            }
+            return datatable;
+        }
+        /// <summary>
+        /// A method that parse DIR data for daily raport exported to CSV
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public StringWriter ParseDayDataDirCSV(SqlDataReader reader)
+        {
+            string unit = "g/l";
+            StringWriter sw = new StringWriter();
+            sw.WriteLine("\"ID\",\"Data\",\"Max Wartosc\",\"Min Wartosc\",\"Jednostka\"");
+            //Read the reader
+            while (reader.Read())
+            {
+                // Parse the data
+                DateTime data = reader.GetDateTime(2);
+                string Max = reader.GetString(0);
+                string Min = reader.GetString(1);
+                int Id = reader.GetInt32(3);
+
+                DateTime parsedData = data.AddDays(-1);
+                String reparsedData = parsedData.ToString("yyyy-MM-dd");
+                float parsedMax = float.Parse(Max);
+                float parsedMin = float.Parse(Min);
+
+
+                sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"", Id, reparsedData, parsedMax, parsedMin, unit));
+            }
+            return sw;
+        }
+        /// <summary>
+        /// A method that parse DIR data for raport exported to excel
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public DataTable ParseDayDataDirExcel(SqlDataReader reader)
+        {
+            string unit = "g/l";
+            // Create datatable
+            DataTable datatable = new DataTable();
+
+            // Create columns
+            DataColumn idColumn = new DataColumn("ID", typeof(Int32));
+            DataColumn dataColumn = new DataColumn("Data", typeof(String));
+            DataColumn maxColumn = new DataColumn("Max Wartość", typeof(float));
+            DataColumn minColumn = new DataColumn("Min Wartość", typeof(float));
+            DataColumn jednostkaColumn = new DataColumn("Jednostka", typeof(String));
+
+            // Add columns do datatable
+            datatable.Columns.Add(idColumn);
+            datatable.Columns.Add(dataColumn);
+            datatable.Columns.Add(maxColumn);
+            datatable.Columns.Add(minColumn);
+            datatable.Columns.Add(jednostkaColumn);
+
+            // Add a row
+            DataRow dataRow;
+
+            // Read the reader
+            while (reader.Read())
+            {
+
+                // Get the data
+                DateTime data = reader.GetDateTime(2);
+                string Max = reader.GetString(0);
+                string Min = reader.GetString(1);
+                int Id = reader.GetInt32(3);
+
+                // Parse the data
+                DateTime parsedData = data.AddDays(-1);
+                String reparsedData = parsedData.ToString("yyyy-MM-dd");
+                float parsedMax = float.Parse(Max);
+                float parsedMin = float.Parse(Min);
+
+
+                // Assign data to the row
+                dataRow = datatable.NewRow();
+                dataRow["ID"] = Id;
+                dataRow["Data"] = reparsedData;
+                dataRow["Max Wartość"] = parsedMax;
+                dataRow["Min Wartość"] = parsedMin;
+                dataRow["Jednostka"] = unit;
+
+                // Add row to the datatable
+                datatable.Rows.Add(dataRow);
+
+            }
+            return datatable;
+        }
+        /// <summary>
+        /// A method that parse DIR data for hourly daily raport exported to CSV
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public StringWriter ParseHourDataDirCSV(SqlDataReader reader)
+        {
+            string unit = "g/l";
+            StringWriter sw = new StringWriter();
+            sw.WriteLine("\"ID\",\"Data\",\"Max Wartosc\",\"Min Wartosc\",\"Jednostka\"");
+            //Read the reader
+            while (reader.Read())
+            {
+                // Parse the data
+                DateTime data = reader.GetDateTime(2);
+                string Max = reader.GetString(0);
+                string Min = reader.GetString(1);
+                int Id = reader.GetInt32(3);
+
+                DateTime parsedData = data.AddHours(-1).AddMinutes(-15);
+                DateTime firstParse = parsedData.AddHours(+1);
+                String secondParse = parsedData.ToString("yyyy-MM-dd HH:mm:ss");
+                String thirdParse = firstParse.ToString("HH:mm:ss");
+                String all = secondParse + "-" + thirdParse;
+                float parsedMax = float.Parse(Max);
+                float parsedMin = float.Parse(Min);
+
+
+                sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"", Id, all, parsedMax, parsedMin, unit));
+            }
+            return sw;
+        }
+        /// <summary>
+        /// A method that parse DIR data for hourly raport exported to excel
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public DataTable ParseHourDataDirExcel(SqlDataReader reader)
+        {
+            string unit = "g/l";
+            // Create datatable
+            DataTable datatable = new DataTable();
+
+            // Create columns
+            DataColumn idColumn = new DataColumn("ID", typeof(Int32));
+            DataColumn dataColumn = new DataColumn("Data", typeof(String));
+            DataColumn maxColumn = new DataColumn("Max Wartość", typeof(float));
+            DataColumn minColumn = new DataColumn("Min Wartość", typeof(float));
+            DataColumn jednostkaColumn = new DataColumn("Jednostka", typeof(String));
+
+            // Add columns do datatable
+            datatable.Columns.Add(idColumn);
+            datatable.Columns.Add(dataColumn);
+            datatable.Columns.Add(maxColumn);
+            datatable.Columns.Add(minColumn);
+            datatable.Columns.Add(jednostkaColumn);
+
+            // Add a row
+            DataRow dataRow;
+
+            // Read the reader
+            while (reader.Read())
+            {
+
+                // Get the data
+                DateTime data = reader.GetDateTime(2);
+                string Max = reader.GetString(0);
+                string Min = reader.GetString(1);
+                int Id = reader.GetInt32(3);
+
+                // Parse the data
+                DateTime parsedData = data.AddHours(-1).AddMinutes(-15);
+                DateTime firstParse = parsedData.AddHours(+1);
+                String secondParse = parsedData.ToString("yyyy-MM-dd HH:mm:ss");
+                String thirdParse = firstParse.ToString("HH:mm:ss");
+                String all = secondParse + "-" + thirdParse;
+                float parsedMax = float.Parse(Max);
+                float parsedMin = float.Parse(Min);
+
+
+                // Assign data to the row
+                dataRow = datatable.NewRow();
+                dataRow["ID"] = Id;
+                dataRow["Data"] = all;
+                dataRow["Max Wartość"] = parsedMax;
+                dataRow["Min Wartość"] = parsedMin;
                 dataRow["Jednostka"] = unit;
 
                 // Add row to the datatable

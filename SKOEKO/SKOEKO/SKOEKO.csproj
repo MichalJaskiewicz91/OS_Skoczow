@@ -396,8 +396,6 @@
     <Content Include="Views\FQR_7_10\FQR_7_10_searchHour.cshtml" />
     <Content Include="Views\FR_9_31\FR_9_31_resultDay.cshtml" />
     <Content Include="Views\FR_9_31\FR_9_31_resultHour.cshtml" />
-    <Content Include="Views\FR_9_31\FR_9_31_saveResultDay.cshtml" />
-    <Content Include="Views\FR_9_31\FR_9_31_saveResultHour.cshtml" />
     <Content Include="Views\FR_9_31\FR_9_31_saveSearchDay.cshtml" />
     <Content Include="Views\FR_9_31\FR_9_31_saveSearchHour.cshtml" />
     <Content Include="Views\FR_9_31\FR_9_31_searchDay.cshtml" />
@@ -420,6 +418,8 @@
     <Content Include="Views\FR_9_38\FR_9_38_saveSearchHour.cshtml" />
     <Content Include="Views\FR_9_38\FR_9_38_searchDay.cshtml" />
     <Content Include="Views\FR_9_38\FR_9_38_searchHour.cshtml" />
+    <Content Include="Views\FR_9_31\FR_9_31_saveResultDay.cshtml" />
+    <Content Include="Views\FR_9_31\FR_9_31_saveResultHour.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
