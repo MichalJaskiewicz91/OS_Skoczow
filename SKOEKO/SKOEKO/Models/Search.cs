@@ -11,5 +11,6 @@ namespace SKOEKO.Models
         public string to { get; set; }
         public string timeStart { get; set; }
         public string timeEnd { get; set; }
+        public string MonthYear { get; set; }
     }
 }

@@ -364,6 +364,7 @@
     <Content Include="Views\FIQR_08_404\FIQR_08_404_saveSearchHour.cshtml" />
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchDay.cshtml" />
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchHour.cshtml" />
+    <Content Include="Views\FQR_4_1\FQR_4_1_searchMonth.cshtml" />
     <None Include="Views\FQR_4_1\FQR_4_1_searchDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_resultHour.cshtml" />

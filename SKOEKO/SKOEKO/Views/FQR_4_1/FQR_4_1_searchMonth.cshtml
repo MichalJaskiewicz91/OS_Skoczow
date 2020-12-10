@@ -245,7 +245,7 @@
                                 <i class="fa fa-dashboard"></i>  <a href="FQR_4_1_searchMonth"><b>Raport miesięczny</b></a>
                             </li>
                             <li>
-                                <i class="fa fa-dashboard"></i>  <a href="FQR_4_1_searchDay"><b>Raport dobowy</b></a>
+                                <i class="fa fa-dashboard"></i>  <a href="FQR_4_1_searchDay">Raport dobowy</a>
                             </li>
                             <li>
                                 <i class="fa fa-dashboard"></i>  <a href="FQR_4_1_searchHour">Raport godzinowy</a>
@@ -264,27 +264,12 @@
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <form action="/FQR_4_1/FQR_4_1_resultDay" method="post">
-                                    <label for="albumTitle">Data rozpoczęcia</label>
-                                    <input class="form-control" type="text" name="from" autocomplete="off" id="from" />
-                                    <label for="TimeStart">Czas rozpoczęcia</label>
-                                    <input class="form-control" type="text" name="timeStart" autocomplete="off" id="timeStart" /> <br />
-                                    <label for="artistName">Data zakończenia</label>
-                                    <input class="form-control" type="text" name="to" autocomplete="off" id="to" />
-                                    <label for="TimeEnd">Czas zakończenia</label>
-                                    <input class="form-control" type="text" name="timeEnd" autocomplete="off" id="timeEnd" /> <br />
+                                <form action="/FQR_4_1/FQR_4_1_resultMonth" method="post">
+                                    <label for="albumTitle">Wybierz miesiąc i rok</label>
+                                    <input class="form-control" type="text" name="MonthYear" autocomplete="off" id="MonthYear" />
                                     <input type="submit" class="btn btn-default" value="Wyślij" />
                                 </form>
 
-                            </div>
-                            <div class="col-lg-6">
-                                <h3>Przykład: Celem jest uzyskanie wartośći za dzień 2018.05.19</h3>
-                                <h4>
-                                    Data rozpoczęcia:2018-05-19   <br>
-                                    Czas rozpoczęcia:00:00:00     <br>
-                                    Data zakończenia:2018-05-19   <br>
-                                    Czas zakończenia:23:59:59
-                                </h4>
                             </div>
                         </div>
                     </div>
@@ -300,48 +285,15 @@
             <script src="js/bootstrap.min.js"></script>
 
             <script type="text/javascript">
-    $(document).ready(function(){
-        $('#from').datepicker(
-            {
-                firstDay: 1,
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1950:2100'
-            });
-        $('#to').datepicker(
-            {
-                firstDay: 1,
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1950:2100'
-            });
+                $(document).ready(function () {
+                    $('#MonthYear').datepicker(
+                        {
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: 'MM yy',
+                        });
 
-        $('#timeStart').timepicker({
-            timeFormat: 'HH:mm:ss',
-            interval: 60,
-            minTime: '00:00:00',
-            maxTime: '23:59:59',
-            defaultTime: '00:00:00',
-            startTime: '00:00:00',
-            dynamic: false,
-            dropdown: true,
-            scrollbar: true
-        });
-
-        $('#timeEnd').timepicker({
-            timeFormat: 'HH:mm:ss',
-            interval: 60,
-            minTime: '00:00:00',
-            maxTime: '23:59:59',
-            defaultTime: '23:59:59',
-            startTime: '00:00:00',
-            dynamic: false,
-            dropdown: true,
-            scrollbar: true
-        });
-    })
+                });
             </script>
 </body>
 </html>

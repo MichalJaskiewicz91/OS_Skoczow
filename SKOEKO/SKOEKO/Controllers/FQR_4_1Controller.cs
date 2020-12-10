@@ -16,7 +16,10 @@ namespace SKOEKO.Controllers
         ParseData parseData = new ParseData();
         StringWriter stringWriter = new StringWriter();
         DataTable dataTable = new DataTable();
+        private DateTime monthYear;
         string dateToRaport;
+        private int month;
+        private int year;
 
 
         public ActionResult FQR_4_1_searchDay()
@@ -32,6 +35,10 @@ namespace SKOEKO.Controllers
             return View();
         }
         public ActionResult FQR_4_1_saveSearchHour()
+        {
+            return View();
+        }
+        public ActionResult FQR_4_1_searchMonth()
         {
             return View();
         }
@@ -240,6 +247,32 @@ namespace SKOEKO.Controllers
             }
 
         }
+        [HttpPost]
+        public void FQR_4_1_resultMonth(Search find, string sumbit)
+        {
+            // parse the data
+            this.monthYear = DateTime.Parse(find.MonthYear);
+
+            // take out month and year
+            month = monthYear.Month;
+            year = monthYear.Year;
+
+
+            String stm = "SELECT * FROM [dbo].[FQR_4_1_Doba] WHERE MONTH(Data) = '" + month + "' AND YEAR(Data) = '" + year + "'ORDER BY Data ASC";
+
+            // Database for debugging
+            SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Citect;Integrated Security=True");
+
+            //SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS;Database=Citect;Integrated Security=true");
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(stm, conn);
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            ViewBag.reader = reader;
+
+
+        }
+
 
     }
 }
