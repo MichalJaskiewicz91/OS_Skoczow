@@ -381,5 +381,80 @@ namespace SKOEKO.Services
             }
             return datatable;
         }
+        /// <summary>
+        /// A method that parse data for daily raport exported to excel
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public DataTable ParseMonthDataExcel(SqlDataReader reader)
+        {
+            string unit = "m3";
+            int nrDnia = 1;
+            // Create datatable
+            DataTable datatable = new DataTable();
+
+            // Create columns
+            DataColumn idColumn = new DataColumn("ID", typeof(Int32));
+            DataColumn nrDniaColumn = new DataColumn("Nr Dnia", typeof(int));
+            DataColumn dataColumn = new DataColumn("Data", typeof(String));
+            DataColumn maxColumn = new DataColumn("Max Wartość", typeof(float));
+            DataColumn minColumn = new DataColumn("Min Wartość", typeof(float));
+            DataColumn sredniaColumn = new DataColumn("Średnia Wartość", typeof(float));
+            DataColumn iloscColumn = new DataColumn("Ilość", typeof(float));
+            DataColumn jednostkaColumn = new DataColumn("Jednostka", typeof(String));
+
+            // Add columns do datatable
+            datatable.Columns.Add(idColumn);
+            datatable.Columns.Add(nrDniaColumn);
+            datatable.Columns.Add(dataColumn);
+            datatable.Columns.Add(maxColumn);
+            datatable.Columns.Add(minColumn);
+            datatable.Columns.Add(sredniaColumn);
+            datatable.Columns.Add(iloscColumn);
+            datatable.Columns.Add(jednostkaColumn);
+
+            // Add a row
+            DataRow dataRow;
+
+            // Read the reader
+            while (reader.Read())
+            {
+
+                // Get the data
+                DateTime data = reader.GetDateTime(4);
+                string Max = reader.GetString(0);
+                string Min = reader.GetString(1);
+                string Sr = reader.GetString(2);
+                string Ilosc = reader.GetString(3);
+                int Id = reader.GetInt32(5);
+
+                // Parse the data
+                DateTime parsedData = data.AddDays(-1);
+                String reparsedData = parsedData.ToString("yyyy-MM-dd");
+                float parsedMax = float.Parse(Max);
+                float parsedMin = float.Parse(Min);
+                float parsedSr = float.Parse(Sr);
+                float parsedIlosc = float.Parse(Ilosc);
+
+                // Assign data to the row
+                dataRow = datatable.NewRow();
+                dataRow["ID"] = Id;
+                dataRow["Nr Dnia"] = nrDnia;
+                dataRow["Data"] = reparsedData;
+                dataRow["Max Wartość"] = parsedMax;
+                dataRow["Min Wartość"] = parsedMin;
+                dataRow["Średnia Wartość"] = parsedSr;
+                dataRow["Ilość"] = parsedIlosc;
+                dataRow["Jednostka"] = unit;
+
+                // Add row to the datatable
+                datatable.Rows.Add(dataRow);
+
+                // Increase a number of the day
+                nrDnia++;
+
+            }
+            return datatable;
+        }
     }
 }

@@ -247,6 +247,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GetValues.cs" />
+    <Compile Include="Helpers\Months.cs" />
     <Compile Include="Models\FQR_4_1.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -365,6 +367,7 @@
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchDay.cshtml" />
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_searchMonth.cshtml" />
+    <Content Include="Views\FQR_4_1\FQR_4_1_resultMonth.cshtml" />
     <None Include="Views\FQR_4_1\FQR_4_1_searchDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_resultHour.cshtml" />
