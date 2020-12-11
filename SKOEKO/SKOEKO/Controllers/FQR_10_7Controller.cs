@@ -6,6 +6,7 @@ using System.IO;
 using SKOEKO.Services;
 using ClosedXML.Excel;
 using System.Data;
+using SKOEKO.Helpers;
 
 namespace SKOEKO.Controllers
 {
@@ -13,10 +14,20 @@ namespace SKOEKO.Controllers
     {
         private static string quantityDay = "FQR_10_7_Raport_Dobowy";
         private static string quantityHour = "FQR_10_7_Raport_Godzinowy";
+        private static string quantityMonth = "FQR_10_7_Raport_Miesięczny";
         ParseData parseData = new ParseData();
         StringWriter stringWriter = new StringWriter();
         DataTable dataTable = new DataTable();
+        private DateTime monthYear;
+        private DateTime nextMonthYear;
         string dateToRaport;
+        private int month;
+        private int year;
+        private int nextMonth;
+        private int nextYear;
+        private int passedYearToQuery;
+
+
 
 
         public ActionResult FQR_10_7_searchDay()
@@ -32,6 +43,10 @@ namespace SKOEKO.Controllers
             return View();
         }
         public ActionResult FQR_10_7_saveSearchHour()
+        {
+            return View();
+        }
+        public ActionResult FQR_10_7_searchMonth()
         {
             return View();
         }
@@ -240,6 +255,80 @@ namespace SKOEKO.Controllers
             }
 
         }
+        [HttpPost]
+        public ActionResult FQR_10_7_resultMonth(Search find, string sumbit)
+        {
 
+            // parse the data
+            monthYear = DateTime.Parse(find.MonthYear);
+
+            // take out current month and year
+            month = monthYear.Month;
+            year = monthYear.Year;
+
+            // next month and year
+            nextMonthYear = monthYear.AddMonths(1);
+
+            // take out next month and year
+            nextMonth = nextMonthYear.Month;
+            nextYear = nextMonthYear.Year;
+
+            // Ccheck whether years are equal
+            if (year == nextYear)
+            {
+                passedYearToQuery = year;
+            }
+            else
+            {
+                passedYearToQuery = nextYear;
+            }
+
+
+            // Create date to raport
+            Months monthEnum = GetValues.GetEnumValue<Months>(month);
+            dateToRaport = quantityMonth + "_" + monthEnum.ToString() + "_" + year;
+
+
+            String stm = "SELECT * " +
+                "FROM [dbo].[FQR_10_7_Doba]" +
+                "WHERE (MONTH(Data) = '" + month + "' AND DAY(DATA) <> 1 AND YEAR(Data) = '" + year + "') " +
+                "OR (MONTH(Data) = '" + nextMonth + "' AND DAY(DATA) = 1 AND YEAR(Data) = '" + passedYearToQuery + "')" +
+                "ORDER BY Data ASC";
+
+            //// Database for debugging
+            //SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Citect;Integrated Security=True");
+
+            SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS;Database=Citect;Integrated Security=true");
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(stm, conn);
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            // Distinguish whether show the data or save to the excel
+            if (sumbit == "Zapisz do Excel")
+            {
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    dataTable = parseData.ParseMonthDataExcel(reader);
+
+                    wb.Worksheets.Add(dataTable, "Report");
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.speadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=" + dateToRaport + ".xlsx");
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(memoryStream);
+                        memoryStream.WriteTo(Response.OutputStream);
+                        Response.Flush();
+                        Response.End();
+                    }
+                }
+                return null;
+            }
+
+            dataTable = parseData.ParseMonthDataExcel(reader);
+            return View(dataTable);
+        }
     }
 }

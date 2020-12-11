@@ -367,6 +367,12 @@
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchDay.cshtml" />
     <Content Include="Views\FIQR_08_404\FIQR_08_404_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_resultMonth.cshtml" />
+    <Content Include="Views\FQR_10_8\FQR_10_8_searchMonth.cshtml" />
+    <Content Include="Views\FQR_10_8\FQR_10_8_resultMonth.cshtml" />
+    <Content Include="Views\FQR_10_4\FQR_10_4_resultMonth.cshtml" />
+    <Content Include="Views\FQR_10_4\FQR_10_4_searchMonth.cshtml" />
+    <Content Include="Views\FQR_10_7\FQR_10_7_resultMonth.cshtml" />
+    <Content Include="Views\FQR_10_7\FQR_10_7_searchMonth.cshtml" />
     <None Include="Views\FQR_4_1\FQR_4_1_searchDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_resultHour.cshtml" />
