@@ -296,9 +296,9 @@ namespace SKOEKO.Controllers
                 "ORDER BY Data ASC";
 
             //// Database for debugging
-            //SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Citect;Integrated Security=True");
+            SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Citect;Integrated Security=True");
 
-            SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS;Database=Citect;Integrated Security=true");
+            //SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS;Database=Citect;Integrated Security=true");
             conn.Open();
             SqlCommand cmd = new SqlCommand(stm, conn);
             SqlDataReader reader = cmd.ExecuteReader();

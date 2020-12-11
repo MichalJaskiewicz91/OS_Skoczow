@@ -388,6 +388,18 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public DataTable ParseMonthDataExcel(SqlDataReader reader)
         {
+            float averageMax = 0;
+            float averageMin = 0;
+            float averageSr = 0;
+
+            float sumMin = 0;
+            float sumMax = 0;
+            float sumSr = 0;
+
+            float sumIlosc= 0;
+
+
+
             string unit = "m3";
             int nrDnia = 1;
             // Create datatable
@@ -436,6 +448,11 @@ namespace SKOEKO.Services
                 float parsedSr = float.Parse(Sr);
                 float parsedIlosc = float.Parse(Ilosc);
 
+                // Calculate average and sum
+                sumMin += parsedMin;
+                sumMax += parsedMax;
+                sumSr += parsedSr;
+                sumIlosc += parsedIlosc;
                 // Assign data to the row
                 dataRow = datatable.NewRow();
                 dataRow["ID"] = Id;
@@ -452,8 +469,25 @@ namespace SKOEKO.Services
 
                 // Increase a number of the day
                 nrDnia++;
-
             }
+
+            // Calculate the averages
+            averageMax = sumMax / (nrDnia - 1);
+            averageMin = sumMin / (nrDnia - 1);
+            averageSr = sumSr / (nrDnia - 1);
+
+            // Add row that consist of sum and average
+            dataRow = datatable.NewRow();
+            dataRow["Data"] = "Średnia/Suma";
+            dataRow["Max Wartość"] = averageMax;
+            dataRow["Min Wartość"] = averageMin;
+            dataRow["Średnia Wartość"] = averageSr;
+            dataRow["Ilość"] = sumIlosc;
+            dataRow["Jednostka"] = unit;
+
+            // Add row to the datatable
+            datatable.Rows.Add(dataRow);
+
             return datatable;
         }
     }
