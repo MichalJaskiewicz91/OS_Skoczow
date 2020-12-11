@@ -388,20 +388,21 @@ namespace SKOEKO.Services
         /// <returns></returns>
         public DataTable ParseMonthDataExcel(SqlDataReader reader)
         {
+            // Averages
             float averageMax = 0;
             float averageMin = 0;
             float averageSr = 0;
 
+            // Sums
             float sumMin = 0;
             float sumMax = 0;
             float sumSr = 0;
-
             float sumIlosc= 0;
 
-
-
+            // Sonstiges :)
             string unit = "m3";
             int nrDnia = 1;
+
             // Create datatable
             DataTable datatable = new DataTable();
 
