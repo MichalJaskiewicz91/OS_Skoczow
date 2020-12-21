@@ -395,6 +395,10 @@
     <Content Include="Views\FIQRC_07_206\FIQRC_07_206_searchMonth.cshtml" />
     <Content Include="Views\FIQRC_07_313\FIQRC_07_313_searchMonth.cshtml" />
     <Content Include="Views\FIQRC_17_004\FIQRC_17_004_searchMonth.cshtml" />
+    <Content Include="Views\DIR_07_202\DIR_07_202_resultMonth.cshtml" />
+    <Content Include="Views\DIR_08_401\DIR_08_401_resultMonth.cshtml" />
+    <Content Include="Views\DIR_07_202\DIR_07_202_searchMonth.cshtml" />
+    <Content Include="Views\DIR_08_401\DIR_08_401_searchMonth.cshtml" />
     <None Include="Views\FQR_4_1\FQR_4_1_searchDay.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_searchHour.cshtml" />
     <Content Include="Views\FQR_4_1\FQR_4_1_resultHour.cshtml" />
